@@ -1,0 +1,73 @@
+<div class="container todo-wrap">
+    <div class="row" [ngClass]="{'completed' : todoItem.isCompleted}" [hidden]="todoItem.isHidden">
+        <div class="col-md-3 text-center text-md-start">{{todoItem.label}}</div>
+        <div class="col-md col-sm-10 text-md-start text-center">{{todoItem.description}}</div>
+        <div class="col-md-2 col-sm-4 text-center">{{todoItem.category}}</div>
+        <div class="col-md-1 col-sm-4 text-center">
+            <ng-container *ngIf="todoItem.isCompleted">
+                <i class="bi bi-check2-all text-light" title="Завершена {{todoItem.completedOn | date: 'MMM d, y'}}"></i>
+            </ng-container>
+            <ng-container *ngIf="!todoItem.isCompleted">
+                <i class="bi bi-hourglass text-info" title="Активная"></i>
+            </ng-container>
+        </div>
+        <div class="col-md-1 col-sm-4 text-center">
+            <div class="d-flex flex-row-reverse justify-content-center mb-3 align-content-center">
+                <button class="p-1 btn btn-link" (click)="openDeleteTodoModal(deleteConfirmation, todoItem.id)">
+                    <i class="bi bi-x-lg" role="button"></i>
+                </button>
+                <button class="p-1 btn btn-link">
+                    <i class="bi bi-pencil-square" role="button" (click)="openEditTodoModal(todoItem)"></i>
+                </button>
+                <button class="p-1 btn btn-link" *ngIf="!todoItem.isCompleted"
+                    (click)="openCompleteTodoModal(completeConfirmation, todoItem)">
+                    <i class="bi bi-check-circle" role="button"></i>
+                </button>
+                <button class="p-1 btn btn-link" *ngIf="todoItem.isCompleted"
+                    (click)="openResetCompleteTodoModal(resetCompleteConfirmation, todoItem)">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #deleteConfirmation let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Удалить заметку?</h4>
+    </div>
+    <div class="modal-body">
+        <p>Вы уверены, что хотите удалить эту заметку?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-dark" (click)="c('Remove click')">Ок</button>
+        <button type="button" class="btn btn-outline-dark" (click)="d('Cancel remove click')">Отмена</button>
+    </div>
+</ng-template>
+<ng-template #completeConfirmation let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Выполнить задачу?</h4>
+    </div>
+    <div class="modal-body">
+        <p>Вы уверены, что хотите выполнить задаяу?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-dark" (click)="c('Complete click')">Ок</button>
+        <button type="button" class="btn btn-outline-dark" (click)="d('Cancel remove click')">Отмена</button>
+    </div>
+</ng-template>
+<ng-template #resetCompleteConfirmation let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Вернуть изначальное значени?</h4>
+    </div>
+    <div class="modal-body">
+        <p>Вы уверены, что хотите отменить выполнение задачи?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-dark" (click)="c('Complete click')">Ок</button>
+        <button type="button" class="btn btn-outline-dark" (click)="d('Cancel remove click')">Отмена</button>
+    </div>
+</ng-template>
+
+<app-add-edit-todo [todoCategories]="todoCategories" [openModal]="openAddEditModal"
+    (onCompleteAction)="editTodoItem.next($event)" (isCategorySelected)="isCategorySelected($event)">
+</app-add-edit-todo>
